@@ -32,7 +32,8 @@ public interface ObjectFactory {
   void setProperties(Properties properties);
 
   /**
-   * Creates a new object with default constructor. 
+   * Creates a new object with default constructor.
+   * 使用无参构造函数创建对象
    * @param type Object type
    * @return
    */
@@ -50,7 +51,7 @@ public interface ObjectFactory {
   /**
    * Returns true if this object can have a set of other objects.
    * It's main purpose is to support non-java.util.Collection objects like Scala collections.
-   * 
+   * 判断对象类型是否为集合类型
    * @param type Object type
    * @return whether it is a collection or not
    * @since 3.1.0

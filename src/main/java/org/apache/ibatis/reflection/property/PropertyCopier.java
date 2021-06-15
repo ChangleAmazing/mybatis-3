@@ -18,6 +18,7 @@ package org.apache.ibatis.reflection.property;
 import java.lang.reflect.Field;
 
 /**
+ * 对象属性复制
  * @author Clinton Begin
  */
 public final class PropertyCopier {

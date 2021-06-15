@@ -29,6 +29,7 @@ public class MethodInvoker implements Invoker {
   public MethodInvoker(Method method) {
     this.method = method;
 
+    // 如果方法只有一个输入参数，则 type 为输入参数的类型；否则，type 为方法返回值的类型
     if (method.getParameterTypes().length == 1) {
       type = method.getParameterTypes()[0];
     } else {

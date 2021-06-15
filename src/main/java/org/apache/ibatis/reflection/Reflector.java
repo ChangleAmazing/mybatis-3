@@ -46,12 +46,17 @@ import org.apache.ibatis.reflection.property.PropertyNamer;
  */
 public class Reflector {
 
+  // 要被反射解析的类
   private final Class<?> type;
+  // 可读属性列表（hasGetter）
   private final String[] readablePropertyNames;
+  // 可读属性列表（hasSetter）
   private final String[] writeablePropertyNames;
   private final Map<String, Invoker> setMethods = new HashMap<String, Invoker>();
   private final Map<String, Invoker> getMethods = new HashMap<String, Invoker>();
+  // set 方法输入类型。key 为 setter 属性名，value 为 setter 第一个参数的类型
   private final Map<String, Class<?>> setTypes = new HashMap<String, Class<?>>();
+  // get 方法输入类型。key 为 getter 属性名，value 为 getter 返回值类型
   private final Map<String, Class<?>> getTypes = new HashMap<String, Class<?>>();
   private Constructor<?> defaultConstructor;
 
