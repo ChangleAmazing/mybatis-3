@@ -319,10 +319,13 @@ public abstract class BaseExecutor implements Executor {
 
   private <E> List<E> queryFromDatabase(MappedStatement ms, Object parameter, RowBounds rowBounds, ResultHandler resultHandler, CacheKey key, BoundSql boundSql) throws SQLException {
     List<E> list;
+    // 将 key 与缓存占位符先放入缓存中
     localCache.putObject(key, EXECUTION_PLACEHOLDER);
     try {
+      // 执行查询
       list = doQuery(ms, parameter, rowBounds, resultHandler, boundSql);
     } finally {
+      // 移除缓存占位符并放入实际结果
       localCache.removeObject(key);
     }
     localCache.putObject(key, list);

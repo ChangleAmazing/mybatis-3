@@ -26,6 +26,7 @@ import org.junit.Assert;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
+import java.io.InputStream;
 import java.io.Reader;
 import java.sql.Connection;
 import java.util.List;
@@ -36,9 +37,11 @@ public class AutoConstructorTest {
   @BeforeClass
   public static void setUp() throws Exception {
     // create a SqlSessionFactory
-    final Reader reader = Resources.getResourceAsReader("org/apache/ibatis/autoconstructor/mybatis-config.xml");
-    sqlSessionFactory = new SqlSessionFactoryBuilder().build(reader);
-    reader.close();
+//    final Reader reader = Resources.getResourceAsReader("org/apache/ibatis/autoconstructor/mybatis-config.xml");
+//    sqlSessionFactory = new SqlSessionFactoryBuilder().build(reader);
+    final InputStream inputStream = Resources.getResourceAsStream("org/apache/ibatis/autoconstructor/mybatis-config.xml");
+    sqlSessionFactory = new SqlSessionFactoryBuilder().build(inputStream);
+//    reader.close();
 
     // populate in-memory database
     final SqlSession session = sqlSessionFactory.openSession();

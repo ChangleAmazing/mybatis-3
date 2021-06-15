@@ -96,11 +96,13 @@ public class XMLConfigBuilder extends BaseBuilder {
       throw new BuilderException("Each XMLConfigBuilder can only be used once.");
     }
     parsed = true;
+    // 解析配置文件根节点 /configuration 下的内容
     parseConfiguration(parser.evalNode("/configuration"));
     return configuration;
   }
 
   private void parseConfiguration(XNode root) {
+    // 按顺序解析配置节点，并将配置信息放入 Configuration 中
     try {
       //issue #117 read properties first
       propertiesElement(root.evalNode("properties"));
