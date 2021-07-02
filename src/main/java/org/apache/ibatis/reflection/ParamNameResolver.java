@@ -1,5 +1,5 @@
 /**
- *    Copyright 2009-2017 the original author or authors.
+ *    Copyright 2009-2021 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -13,7 +13,6 @@
  *    See the License for the specific language governing permissions and
  *    limitations under the License.
  */
-
 package org.apache.ibatis.reflection;
 
 import java.lang.annotation.Annotation;
@@ -34,6 +33,7 @@ public class ParamNameResolver {
   private static final String GENERIC_NAME_PREFIX = "param";
 
   /**
+   * 按参数顺序放入 map 中
    * <p>
    * The key is the index and the value is the name of the parameter.<br />
    * The name is obtained from {@link Param} if specified. When {@link Param} is not specified,
@@ -48,14 +48,18 @@ public class ParamNameResolver {
    */
   private final SortedMap<Integer, String> names;
 
+  // 参数是否有 @Param 注解
   private boolean hasParamAnnotation;
 
   public ParamNameResolver(Configuration config, Method method) {
+    // 获取参数类型列表
     final Class<?>[] paramTypes = method.getParameterTypes();
+    // 准备存取所有参数的注解
     final Annotation[][] paramAnnotations = method.getParameterAnnotations();
     final SortedMap<Integer, String> map = new TreeMap<Integer, String>();
     int paramCount = paramAnnotations.length;
     // get names from @Param annotations
+    // 循环处理各个参数
     for (int paramIndex = 0; paramIndex < paramCount; paramIndex++) {
       if (isSpecialParameter(paramTypes[paramIndex])) {
         // skip special parameters
@@ -64,6 +68,7 @@ public class ParamNameResolver {
       String name = null;
       for (Annotation annotation : paramAnnotations[paramIndex]) {
         if (annotation instanceof Param) {
+          // 如果参数被 @Param 修饰，则以 @Param 设置的 value 作为参数名
           hasParamAnnotation = true;
           name = ((Param) annotation).value();
           break;
@@ -71,12 +76,14 @@ public class ParamNameResolver {
       }
       if (name == null) {
         // @Param was not specified.
+        // 如果没有 @Param 指定，则使用参数原有名称
         if (config.isUseActualParamName()) {
           name = getActualParamName(method, paramIndex);
         }
         if (name == null) {
           // use the parameter index as the name ("0", "1", ...)
           // gcode issue #71
+          // 如果参数名称获取不到，则按照参数索引命名
           name = String.valueOf(map.size());
         }
       }
@@ -104,6 +111,7 @@ public class ParamNameResolver {
   }
 
   /**
+   * 将参数解析为实际取值
    * <p>
    * A single non-special parameter is returned without a name.<br />
    * Multiple parameters are named using the naming rule.<br />

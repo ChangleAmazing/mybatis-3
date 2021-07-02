@@ -1,5 +1,5 @@
 /**
- *    Copyright 2009-2015 the original author or authors.
+ *    Copyright 2009-2021 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -104,12 +104,16 @@ public abstract class BaseTypeHandler<T> extends TypeReference<T> implements Typ
     }
   }
 
+  // 向 PreparedStatement 对象的指定变量位置写入一个 非空值
   public abstract void setNonNullParameter(PreparedStatement ps, int i, T parameter, JdbcType jdbcType) throws SQLException;
 
+  // 从 ResultSet 中按照字段名读出一个可能为空的值
   public abstract T getNullableResult(ResultSet rs, String columnName) throws SQLException;
 
+  // 从 ResultSet 中按照字段位置读出一个可能为空的值
   public abstract T getNullableResult(ResultSet rs, int columnIndex) throws SQLException;
 
+  // 从 CallableStatement 中按照字段编号读出一个可能为空的值
   public abstract T getNullableResult(CallableStatement cs, int columnIndex) throws SQLException;
 
 }

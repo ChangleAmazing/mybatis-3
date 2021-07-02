@@ -1,5 +1,5 @@
 /**
- *    Copyright 2009-2015 the original author or authors.
+ *    Copyright 2009-2021 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -28,6 +28,7 @@ public class SimpleTypeRegistry {
 
   private static final Set<Class<?>> SIMPLE_TYPE_SET = new HashSet<Class<?>>();
 
+  // 存放基础类型
   static {
     SIMPLE_TYPE_SET.add(String.class);
     SIMPLE_TYPE_SET.add(Byte.class);

@@ -1,5 +1,5 @@
 /**
- *    Copyright 2009-2018 the original author or authors.
+ *    Copyright 2009-2021 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -54,15 +54,22 @@ import org.apache.ibatis.reflection.Jdk;
  */
 public final class TypeHandlerRegistry {
 
+  // JDBC 类型与对应类型处理器的映射
   private final Map<JdbcType, TypeHandler<?>> JDBC_TYPE_HANDLER_MAP = new EnumMap<JdbcType, TypeHandler<?>>(JdbcType.class);
+
+  // Java 类型与对应类型处理器的映射
   private final Map<Type, Map<JdbcType, TypeHandler<?>>> TYPE_HANDLER_MAP = new ConcurrentHashMap<Type, Map<JdbcType, TypeHandler<?>>>();
+  // 未知类型处理器
   private final TypeHandler<Object> UNKNOWN_TYPE_HANDLER = new UnknownTypeHandler(this);
+  // 所有类型处理器
   private final Map<Class<?>, TypeHandler<?>> ALL_TYPE_HANDLERS_MAP = new HashMap<Class<?>, TypeHandler<?>>();
 
   private static final Map<JdbcType, TypeHandler<?>> NULL_TYPE_HANDLER_MAP = Collections.emptyMap();
 
+  // 默认的枚举类型处理器
   private Class<? extends TypeHandler> defaultEnumTypeHandler = EnumTypeHandler.class;
 
+  // 注册类型处理器
   public TypeHandlerRegistry() {
     register(Boolean.class, new BooleanTypeHandler());
     register(boolean.class, new BooleanTypeHandler());
@@ -220,15 +227,19 @@ public final class TypeHandlerRegistry {
     if (ParamMap.class.equals(type)) {
       return null;
     }
+    // 根据 Java 类型找到对应的 jdbcHandlerMap
     Map<JdbcType, TypeHandler<?>> jdbcHandlerMap = getJdbcHandlerMap(type);
     TypeHandler<?> handler = null;
     if (jdbcHandlerMap != null) {
+      // 根据 jdbcHandlerMap 找到对应的处理器
       handler = jdbcHandlerMap.get(jdbcType);
       if (handler == null) {
+        // 通过 null 去取值，可能获取到 EnumMap 或者 HashMap
         handler = jdbcHandlerMap.get(null);
       }
       if (handler == null) {
         // #591
+        // 如果 jdbcHandlerMap 只有一个类型处理器，则直接取出
         handler = pickSoleHandler(jdbcHandlerMap);
       }
     }

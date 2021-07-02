@@ -1,5 +1,5 @@
 /**
- *    Copyright 2009-2016 the original author or authors.
+ *    Copyright 2009-2021 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -26,6 +26,8 @@ import java.lang.reflect.WildcardType;
 import java.util.Arrays;
 
 /**
+ * 泛型参数解析器
+ * 推断属性、返回值、输入参数中泛型的具体类型
  * @author Iwao AVE!
  */
 public class TypeParameterResolver {
@@ -64,13 +66,20 @@ public class TypeParameterResolver {
     return result;
   }
 
+  /**
+   * 类型解析
+   * @param type 要解析的字段类型
+   * @param srcType 字段所属类
+   * @param declaringClass 字段声明类
+   * @return
+   */
   private static Type resolveType(Type type, Type srcType, Class<?> declaringClass) {
     if (type instanceof TypeVariable) {
-      return resolveTypeVar((TypeVariable<?>) type, srcType, declaringClass);
+      return resolveTypeVar((TypeVariable<?>) type, srcType, declaringClass); // 类型变量 Map<K, V>
     } else if (type instanceof ParameterizedType) {
-      return resolveParameterizedType((ParameterizedType) type, srcType, declaringClass);
+      return resolveParameterizedType((ParameterizedType) type, srcType, declaringClass); // 参数化类型 Collection<String>
     } else if (type instanceof GenericArrayType) {
-      return resolveGenericArrayType((GenericArrayType) type, srcType, declaringClass);
+      return resolveGenericArrayType((GenericArrayType) type, srcType, declaringClass); // 泛型参数 List<T>
     } else {
       return type;
     }
@@ -80,10 +89,13 @@ public class TypeParameterResolver {
     Type componentType = genericArrayType.getGenericComponentType();
     Type resolvedComponentType = null;
     if (componentType instanceof TypeVariable) {
+      // 元素类型为类变量，例如 T[]
       resolvedComponentType = resolveTypeVar((TypeVariable<?>) componentType, srcType, declaringClass);
     } else if (componentType instanceof GenericArrayType) {
+      // 元素类型为泛型列表。例如 T[][]
       resolvedComponentType = resolveGenericArrayType((GenericArrayType) componentType, srcType, declaringClass);
     } else if (componentType instanceof ParameterizedType) {
+      // 元素类型为参数化类型。例如 Collection<T>[]
       resolvedComponentType = resolveParameterizedType((ParameterizedType) componentType, srcType, declaringClass);
     }
     if (resolvedComponentType instanceof Class) {
